@@ -41,7 +41,6 @@ options.add_argument("window-size=1920,1080")
 
 
 #запуск драйвера
-# def run_driver():
 service = Service(path_driver)
 driver = webdriver.Chrome(service=service, options=options)
 driver.get("https://web.telegram.org/z")
@@ -49,7 +48,7 @@ if args.debug:
    print('Браузер запущен')
 #для обновления
 time.sleep(3)
-# run_driver()
+
 # функция выхода и с сообщением
 def quit(message):
     if args.debug:
@@ -76,21 +75,6 @@ def make_screenshot(path):
     if res:
         print("/upload/" + args.channel_name + "/" + args.id + '.png')
 
-# логика поиска поста если знаем id поста
-# def find_post_by_id(id):
-#     time.sleep(5)
-#     post = driver.find_element(By.XPATH, f"//*[@id='message{id}']")
-#     driver.execute_script("return arguments[0].scrollIntoView();", post)
-#     file_name = "\\" + id + ".png"
-#     path = 'C:\\Users\\123\\Desktop\\OpenServer\\domains\\ParserTelegram\\frontend\\web\\upload\\' + channel_name
-#     # Check whether the specified path exists or not
-#     isExist = os.path.exists(path)
-#     if not isExist:
-#       # Create a new directory because it does not exist
-#       os.makedirs(path)
-#
-#     make_screenshot(path + file_name)
-
 # поиск поста по хэштегу
 def find_post_by_custom_id(id):
     posts = WebDriverWait(driver, 25).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, ".Message.message-list-item")))
@@ -103,11 +87,12 @@ def find_post_by_custom_id(id):
             print('Пост найден')
         post = e
         driver.execute_script("return arguments[0].scrollIntoView();", post)
+
+        #Подсветка дива
         driver.execute_script("return arguments[0].style.boxShadow='.5em 0 0 #FFC107, -.5em 0 0 #FFC107'", p_container)
         file_name =  '/'+id + ".png"
         path = os.path.dirname(os.path.abspath(__file__))
         path = path.replace('parser', '') + "upload/" + args.channel_name
-#         print(path)
         isExist = os.path.exists(path)
         if not isExist:
           os.makedirs(path)
@@ -120,7 +105,6 @@ chats = driver.find_elements(By.CSS_SELECTOR, '.chat-item-clickable')
 clickable_item = find_clickable_element(chats)
 
 if clickable_item:
-
   try:
     clickable_item.click()
     #ищем пост, скриншотим,сохраняем,выходим
